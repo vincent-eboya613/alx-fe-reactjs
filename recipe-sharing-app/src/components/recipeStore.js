@@ -1,23 +1,35 @@
-import { create } from 'zustand';
+import create from 'zustand'
 
-export const useRecipeStore = create(set => ({
-  recipes: [], // Array of recipes
-  searchTerm: '', // The term to search/filter by
-  filteredRecipes: [], // Array to hold the filtered results
-  
-  // Existing actions
+const useRecipeStore = create(set => ({
+  recipes: [],
+  favorites: [],
+  addFavorite: (recipeId) => set(state => ({ favorites: [...state.favorites, recipeId] })),
+  removeFavorite: (recipeId) => set(state => ({
+    favorites: state.favorites.filter(id => id !== recipeId)
+  })),
+  recommendations: [],
+  generateRecommendations: () => set(state => {
+    // Mock implementation based on favorites
+    const recommended = state.recipes.filter(recipe =>
+      state.favorites.includes(recipe.id) && Math.random() > 0.5
+    );
+    return { recommendations: recommended };
+  }),
+  searchTerm: '',
+  filteredRecipes: [],
   addRecipe: (newRecipe) => set(state => ({ recipes: [...state.recipes, newRecipe] })),
-  setRecipes: (recipes) => set({ recipes }), // Fixing typo (should be recipes instead of Recipes)
-  deleteRecipe: (recipeToDelete) => set(state => ({ 
-    recipes: state.recipes.filter(recipe => recipe !== recipeToDelete) 
+  setRecipes: (recipes) => set({ recipes }),
+  deleteRecipe: (id) => set(state => ({recipes: state.recipes.filter(recipe => recipe.id !== id), filteredRecipes: state.filteredRecipes.filter(recipe => recipe.id !== id),
   })),
-  updateRecipe: (updatedRecipe) => set(state => ({ 
+  updateRecipe: (updatedRecipe) => set(state => ({
     recipes: state.recipes.map(recipe => 
-      recipe.id === updatedRecipe.id ? updatedRecipe : recipe) 
+      recipe.id === updatedRecipe.id ? updatedRecipe : recipe
+    ),
+    filteredRecipes: state.filteredRecipes.map(recipe => 
+      recipe.id === updatedRecipe.id ? updatedRecipe : recipe
+    ),
   })),
-  
-  // New actions for search and filtering
-  setSearchTerm: (term) => set({ searchTerm: term }), // Action to set search term
+  setSearchTerm: (term) => set({ searchTerm: term }),
   filterRecipes: () => set(state => ({
     filteredRecipes: state.recipes.filter(recipe =>
       recipe.title.toLowerCase().includes(state.searchTerm.toLowerCase())
@@ -25,4 +37,4 @@ export const useRecipeStore = create(set => ({
   })),
 }));
 
-export { useRecipeStore };
+export {useRecipeStore};
