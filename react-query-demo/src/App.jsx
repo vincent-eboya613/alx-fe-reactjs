@@ -3,14 +3,15 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import PostsComponent from "./PostsComponent"; // Adjust the import path if necessary
 
 // Create a client
-const queryClient = new QueryClient();
+import './App.css'
+import UserProfile from './components/UserProfile'
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <PostsComponent />
-    </QueryClientProvider>
-  );
+    <>
+      <UserProfile />
+    </>
+  )
 }
 
-export default App;
+export default App
