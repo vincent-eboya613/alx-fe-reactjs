@@ -1,16 +1,39 @@
-<div class="container mx-auto p-4">
-  <h1 class="text-3xl font-bold text-center mb-6">Our Recipes</h1>
-  <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-    <!-- Recipe Card -->
-    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg hover:scale-105 transition-transform duration-300">
-      <img src="recipe-image.jpg" alt="Recipe" class="w-full h-48 object-cover">
-      <div class="p-4">
-        <h2 class="text-lg font-semibold mb-2">Recipe Title</h2>
-        <p class="text-sm text-gray-600">
-          A brief summary of the recipe goes here. This is a sample description for the recipe.
-        </p>
+import React, { useState, useEffect } from 'react';
+
+const HomePage = () => {
+  const [recipes, setRecipes] = useState([]);
+
+  useEffect(() => {
+    // Fetch data from data.json
+    fetch('/data.json')
+      .then((response) => response.json())
+      .then((data) => setRecipes(data))
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
+
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold text-center mb-6">Our Recipes</h1>
+      <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {recipes.map((recipe) => (
+          <div
+            key={recipe.id}
+            className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg hover:scale-105 transition-transform duration-300"
+          >
+            <img
+              src={recipe.image}
+              alt={recipe.title}
+              className="w-full h-48 object-cover"
+            />
+            <div className="p-4">
+              <h2 className="text-lg font-semibold mb-2">{recipe.title}</h2>
+              <p className="text-sm text-gray-600">{recipe.summary}</p>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
-    <!-- Repeat Recipe Card for other recipes -->
-  </div>
-</div>
+  );
+};
+
+export default HomePage;
